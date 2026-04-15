@@ -1,4 +1,4 @@
-name: Producer Regression
+name: JMS MQ Consumer Regression
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  producer-layers:
+  consumer-layers:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        layer: [level1, level2]
+        gate: [level3, level4, level5]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -31,20 +31,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install "./enterprise-regression-platform"
-      - name: Checkout, build, and run producer regression layer
+      - name: Run JMS MQ consumer regression
         run: |
           regauto checkout-build-run \
             --remote-url "${{ github.server_url }}/${{ github.repository }}.git" \
             --branch "${{ github.head_ref || github.ref_name }}" \
-            --gate "${{ matrix.layer }}" \
+            --gate "${{ matrix.gate }}" \
             --workspace-root "$RUNNER_TEMP/regression-workspaces" \
-            --directory-name regression-test-producer \
-            --results-dir "$RUNNER_TEMP/regression-results/${{ matrix.layer }}" \
-            --assets-root "$GITHUB_WORKSPACE/enterprise-regression-platform/suites/regression-test-producer" \
+            --directory-name jms-mq-consumer \
+            --results-dir "$RUNNER_TEMP/regression-results/${{ matrix.gate }}" \
             --trigger github-actions
       - name: Upload regression artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: producer-${{ matrix.layer }}-results
-          path: ${{ runner.temp }}/regression-results/${{ matrix.layer }}
+          name: jms-mq-consumer-${{ matrix.gate }}-results
+          path: ${{ runner.temp }}/regression-results/${{ matrix.gate }}

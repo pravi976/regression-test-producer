@@ -1,11 +1,10 @@
-package com.enterprise.regression.upstream;
+package com.enterprise.jms.consumer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RegressionTestUpstreamApplicationTests {
+class JmsMqConsumerApplicationTests {
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 }
